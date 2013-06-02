@@ -1,0 +1,92 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WebServer.Models
+{
+	public class Request
+	{
+		private string[] validMethods = {"HEAD", "GET", "POST", "PUT", "DELETE"};
+		private string[] validProtocols = {"HTTP/1.0", "HTTP/1.1"};
+
+		private string method;
+		public string Method
+		{
+			get { return method; }
+		}
+
+		private string path;
+		public string Path
+		{
+			get { return path; }
+		}
+
+		private string protocol;
+		public string Protocol
+		{
+			get { return protocol; }
+		}
+
+		private Dictionary<string, string> headers;
+		public Dictionary<string, string> Headers
+		{
+			get { return headers; }
+		}
+
+		private Dispatcher dispatcher;
+
+		private Response response;
+		public Response Response
+		{
+			get { return response; }
+			set { response = value; }
+		}
+
+		public Request()
+		{
+			headers = new Dictionary<string, string>();
+			dispatcher = new Dispatcher();
+		}
+
+		public void SetHeader(string key, string value)
+		{
+			headers.Add(key, value);
+		}
+
+		public void ParseRequest(string line)
+		{
+			var parts = line.Split(' ');
+
+			if (parts.Length != 3) return;
+
+			if (validMethods.Contains(parts[0]))
+			{
+				method = parts[0];
+			}
+
+			path = parts[1];
+
+			if (validProtocols.Contains(parts[1]))
+			{
+				protocol = parts[1];
+			}
+		}
+
+		public void ParseHeader(string line)
+		{
+			var parts = line.Split(':');
+
+			if (parts.Length != 2)
+			{
+				SetHeader(parts[0], parts[1]);
+			}
+		}
+
+		public void dispatch()
+		{
+			dispatcher.Dispatch(this);
+		}
+	}
+}
