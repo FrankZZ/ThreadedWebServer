@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebServer.Exceptions;
 
 namespace WebServer.Models
 {
@@ -24,7 +26,24 @@ namespace WebServer.Models
 			{
 				request.Response = response;
 
-				response.Body = "<h1>Het werkt!</h1>";
+				FileReader fr = new FileReader(request.Path);
+
+				try
+				{
+					fr.Parse();
+
+					response.Body = fr.getContents();
+				}
+				catch (AccessDeniedException ex)
+				{
+					response.Status = 404; // Not found
+				}
+				catch (FileNotFoundException ex)
+				{
+					response.Status = 404; // Not found
+				}
+
+				response.Body = fr.getContents();
 			}
 		}
 	}

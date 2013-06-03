@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
+using System.IO;
 
 namespace WebServer.Models
 {
@@ -14,7 +15,7 @@ namespace WebServer.Models
 		private int port;
 		private TcpListener tcpListener;
 
-		private const string WEBROOT = Environment.CurrentDirectory + @"\Root";
+		public static string WEBROOT = Path.GetFullPath(Environment.CurrentDirectory + @"\Root");
 
 		public Server(string host, int port)
 		{

@@ -68,9 +68,9 @@ namespace WebServer.Models
 
 			path = parts[1];
 
-			if (validProtocols.Contains(parts[1]))
+			if (validProtocols.Contains(parts[2]))
 			{
-				protocol = parts[1];
+				protocol = parts[2];
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace WebServer.Models
 		{
 			var parts = line.Split(':');
 
-			if (parts.Length != 2)
+			if (parts.Length == 2)
 			{
 				SetHeader(parts[0], parts[1]);
 			}

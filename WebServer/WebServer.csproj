@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\AccessDeniedException.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="Models\Dispatcher.cs" />
+    <Compile Include="Models\FileReader.cs" />
+    <Compile Include="Models\MimeTypes.cs" />
     <Compile Include="Models\Request.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Models\Server.cs" />

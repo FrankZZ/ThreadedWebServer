@@ -11,6 +11,7 @@ namespace WebServer.Models
 		private static Dictionary<int, string> statuses = new Dictionary<int, string>()
 		{
 			{ 200, "OK" },
+			{ 400, "Bad Request"},
 			{ 403, "Forbidden" },
 			{ 404, "Not Found" }
 		};
