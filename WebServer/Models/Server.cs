@@ -14,6 +14,8 @@ namespace WebServer.Models
 		private int port;
 		private TcpListener tcpListener;
 
+		private const string WEBROOT = Environment.CurrentDirectory + @"\Root";
+
 		public Server(string host, int port)
 		{
 			this.host = host;
