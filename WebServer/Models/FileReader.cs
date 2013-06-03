@@ -10,6 +10,8 @@ namespace WebServer.Models
 {
 	public class FileReader
 	{
+		private const int CONTENT_BUFFER_SIZE = 512;
+
 		private string URI;
 
 		private string _mimeType;
@@ -38,32 +40,12 @@ namespace WebServer.Models
 		{
 			try 
 			{
-				string absolutePath = Path.GetFullPath(Server.WEBROOT + URI);
-			
-				// Check for webroot jail breakout
-				if (absolutePath.StartsWith(Server.WEBROOT))
-				{
-					_fileExtension = Path.GetExtension(absolutePath);
-				}
-				else
-				{
-					throw new AccessDeniedException();
-				}
-			}
-			catch (FileNotFoundException ex)
-			{
-				// Re-throw for Dispatcher
-				throw ex;
-			}
-			catch (AccessDeniedException ex)
-			{
-				// Re-throw for Dispatcher
-				throw ex;
+				_fileExtension = Path.GetExtension(URI);
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine("FileReader: Unknown error while parsing URI");
-				Console.WriteLine(ex.ToString());
+				Console.WriteLine("FileReader: Unknown error while parsing URI " + URI);
+				//Console.WriteLine(ex.ToString());
 			}
 
 		}
@@ -72,22 +54,16 @@ namespace WebServer.Models
 		{
 			StringBuilder result = new StringBuilder();
 
-			var buffer = new char[2048];
+			var buffer = new char[CONTENT_BUFFER_SIZE];
 
-			try 
+
+			using (StreamReader sr = new StreamReader(this.URI))
 			{
-				using (StreamReader sr = new StreamReader(this.URI))
+				
+				while (sr.Read(buffer, 0, buffer.Length) != 0)
 				{
-				
-					while (sr.Read(buffer, 0, buffer.Length) != 0)
-					{
-						result.Append(buffer);
-					}
+					result.Append(buffer);
 				}
-			}
-			catch (Exception ex)
-			{
-				
 			}
 
 			return result.ToString();

@@ -22,11 +22,27 @@ namespace WebServer.Models
 		{
 			this.request = request;
 
-			if (true)
-			{
-				request.Response = response;
+			request.Response = response;
+			bool isDirectory = false;
 
-				FileReader fr = new FileReader(request.Path);
+			string absolutePath = Path.GetFullPath(Server.WEBROOT + request.Path);
+			
+			// Check for webroot jail breakout
+			if (absolutePath.StartsWith(Server.WEBROOT))
+			{
+				if (!Path.HasExtension(request.Path))
+				{
+					if (!absolutePath.EndsWith("/"))
+					{
+						absolutePath += "/";
+					}
+
+					absolutePath += "index.html";
+					Console.WriteLine(absolutePath);
+					isDirectory = true;
+				}
+
+				FileReader fr = new FileReader(absolutePath);
 
 				try
 				{
@@ -40,10 +56,17 @@ namespace WebServer.Models
 				}
 				catch (FileNotFoundException ex)
 				{
-					response.Status = 404; // Not found
-				}
+					if (isDirectory)
+					{
+						// index.html not found in the directory
 
-				response.Body = fr.getContents();
+						response.Status = 403; // Forbidden
+					}
+					else
+					{
+						response.Status = 404; // Not found
+					}
+				}
 			}
 		}
 	}
