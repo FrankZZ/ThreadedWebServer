@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.IO;
 
-namespace WebServer.Models
+namespace WebServer.Models.Models
 {
 	public class Server
 	{

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WebServer.Models
+namespace WebServer.Models.Models
 {
 	public class ServerThread : IDisposable
 	{

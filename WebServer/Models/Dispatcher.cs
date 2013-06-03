@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebServer.Exceptions;
+using WebServer.Models.Exceptions;
 
-namespace WebServer.Models
+namespace WebServer.Models.Models
 {
 	public class Dispatcher
 	{
