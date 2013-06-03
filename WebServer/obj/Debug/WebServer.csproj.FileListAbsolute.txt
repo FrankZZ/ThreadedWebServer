@@ -1,18 +1,1 @@
-c:\users\jim\documents\visual studio 2012\Projects\WebServer\WebServer\bin\Debug\WebServer.exe.config
-c:\users\jim\documents\visual studio 2012\Projects\WebServer\WebServer\bin\Debug\WebServer.exe
-c:\users\jim\documents\visual studio 2012\Projects\WebServer\WebServer\bin\Debug\WebServer.pdb
-c:\users\jim\documents\visual studio 2012\Projects\WebServer\WebServer\obj\Debug\WebServer.csprojResolveAssemblyReference.cache
-c:\users\jim\documents\visual studio 2012\Projects\WebServer\WebServer\obj\Debug\WebServer.exe
-c:\users\jim\documents\visual studio 2012\Projects\WebServer\WebServer\obj\Debug\WebServer.pdb
-C:\Users\Jim\Desktop\WebServer\WebServer\bin\Debug\WebServer.exe.config
-C:\Users\Jim\Desktop\WebServer\WebServer\obj\Debug\WebServer.exe
-C:\Users\Jim\Desktop\WebServer\WebServer\obj\Debug\WebServer.pdb
-C:\Users\Jim\Desktop\WebServer\WebServer\bin\Debug\WebServer.exe
-C:\Users\Jim\Desktop\WebServer\WebServer\bin\Debug\WebServer.pdb
-C:\Users\Jim\Desktop\WebServer\WebServer\obj\Debug\WebServer.csprojResolveAssemblyReference.cache
-C:\Users\Jim\Documents\WebServer\WebServer\bin\Debug\WebServer.exe.config
-C:\Users\Jim\Documents\WebServer\WebServer\obj\Debug\WebServer.exe
-C:\Users\Jim\Documents\WebServer\WebServer\obj\Debug\WebServer.pdb
-C:\Users\Jim\Documents\WebServer\WebServer\bin\Debug\WebServer.exe
-C:\Users\Jim\Documents\WebServer\WebServer\bin\Debug\WebServer.pdb
-C:\Users\Jim\Documents\WebServer\WebServer\obj\Debug\WebServer.csprojResolveAssemblyReference.cache
+C:\Users\Jim\Documents\Visual Studio 2012\Projects\Webserver\WebServer\bin\Debug\WebServer.exe.config
