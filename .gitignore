@@ -1,4 +1,3 @@
-WebServer/obj/**
-WebServer/bin/**
-WebServer/obj
 WebServer/bin
+WebServer/obj
+*.suo
