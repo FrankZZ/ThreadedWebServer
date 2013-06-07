@@ -2,19 +2,20 @@
 
 namespace WebServer.Models
 {
-	/*
-	 * Goed doorlezen: http://bit.ly/1153Eqd
-	 * Na het inloggen nog een keer vernieuwen
-	 * */
-
 	public static class Init
 	{
 		private const string HOST = "0.0.0.0";
 		private const int PORT = 3333;
 
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
-			var server = new Server(HOST, PORT);
+			var config = new ConfigLoader("Config.xml").Read();
+
+			var server = new Server(
+				config.GetEntry("Host"), 
+				Convert.ToInt32(config.GetEntry("Port"))
+			);
+
 			server.listen();
 		}
 	}

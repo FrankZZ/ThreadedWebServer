@@ -25,13 +25,10 @@ namespace WebServer.Models
 			get { return _fileExtension; }
 		}
 
-
-
 		public FileReader(string URI)
 		{
 			this.URI = URI;
 		}
-
 
 		public void Parse()
 		{
