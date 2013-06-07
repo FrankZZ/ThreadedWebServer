@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\AccessDeniedException.cs" />
     <Compile Include="Init.cs" />
+    <Compile Include="Models\ConfigLoader.cs" />
     <Compile Include="Models\Dispatcher.cs" />
     <Compile Include="Models\FileReader.cs" />
     <Compile Include="Models\MimeTypes.cs" />
@@ -57,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="WebRoot\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

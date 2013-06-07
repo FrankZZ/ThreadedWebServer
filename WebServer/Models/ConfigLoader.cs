@@ -3,11 +3,11 @@ using System.Xml;
 
 namespace WebServer.Models
 {
-	public class XMLLoader
+	public class ConfigLoader
 	{
 		private XmlReader xmlReader;
 
-		public XMLLoader(string URI)
+		public ConfigLoader(string URI)
 		{
 			xmlReader = new XmlTextReader(URI);
 		}
