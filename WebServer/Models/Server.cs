@@ -11,7 +11,7 @@ namespace WebServer.Models
 		private int port;
 		private TcpListener tcpListener;
 
-		public static string WEBROOT = Path.GetFullPath(Environment.CurrentDirectory + @"\Root");
+		public static string WEBROOT = Path.GetFullPath(Environment.CurrentDirectory + @"\WebRoot");
 
 		public Server(string host, int port)
 		{
