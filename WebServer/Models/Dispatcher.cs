@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using WebServer.Exceptions;
 
 namespace WebServer.Models
@@ -39,15 +40,32 @@ namespace WebServer.Models
 					isDirectory = true;
 				}
 
-				FileReader fr = new FileReader(absolutePath);
-
 				try
 				{
-					fr.Parse();
+					String fileExtension = Path.GetExtension(absolutePath).Substring(1);
 					
-					response.SetHeader("Content-Type", fr.MimeType);
+					if (MimeTypes.List.ContainsKey(fileExtension))
+					{
+						response.SetHeader("Content-Type", MimeTypes.List[fileExtension]);
+					}
 
-					fr.sendContents(request.Stream);
+					var buffer = new byte[1024];
+					var stream = request.Stream;
+
+					using (FileStream fs = File.OpenRead(absolutePath))
+					{
+
+						byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
+						
+						stream.Write(headers, 0, headers.Length);
+						
+						while (fs.Read(buffer, 0, buffer.Length) > 0)
+						{
+							stream.Write(buffer, 0, buffer.Length);
+						}
+
+						stream.Flush();
+					}
 
 				}
 				catch (AccessDeniedException ex)
