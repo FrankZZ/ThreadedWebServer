@@ -55,10 +55,9 @@ namespace WebServer.Models
 				lines.Add(pair.Key + ": " + pair.Value);
 			}
 
-			lines.Add(null);
-			lines.Add(body);
-
-			string result = String.Join("\n", lines);
+			string result = String.Join("\r\n", lines);
+			// 2 newlines voor seperator: headers - body
+			result += "\r\n\r\n";
 
 			Console.WriteLine(result);
 

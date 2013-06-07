@@ -46,7 +46,6 @@
     <Compile Include="Init.cs" />
     <Compile Include="Models\ConfigLoader.cs" />
     <Compile Include="Models\Dispatcher.cs" />
-    <Compile Include="Models\FileReader.cs" />
     <Compile Include="Models\MimeTypes.cs" />
     <Compile Include="Models\Request.cs" />
     <Compile Include="Models\Response.cs" />

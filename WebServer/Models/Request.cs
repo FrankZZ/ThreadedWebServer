@@ -57,6 +57,11 @@ namespace WebServer.Models
 
 		public void SetHeader(string key, string value)
 		{
+			if (headers.ContainsKey(key))
+			{
+				headers.Remove(key);
+			}
+
 			headers.Add(key, value);
 		}
 
