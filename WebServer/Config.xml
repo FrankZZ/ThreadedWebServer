@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+	<Entry name="Host" value="0.0.0.0" />
+	<Entry name="Port" value="3333" />
+	<Entry name="WebRoot" value="./WebRoot/" />
+</Settings>
