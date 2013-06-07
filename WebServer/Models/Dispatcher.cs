@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebServer.Models.Exceptions;
+﻿using System.IO;
+using WebServer.Exceptions;
 
-namespace WebServer.Models.Models
+namespace WebServer.Models
 {
 	public class Dispatcher
 	{
