@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace WebServer.Models
@@ -7,6 +8,12 @@ namespace WebServer.Models
 	{
 		private string[] validMethods = {"HEAD", "GET", "POST", "PUT", "DELETE"};
 		private string[] validProtocols = {"HTTP/1.0", "HTTP/1.1"};
+		
+		private Stream stream;
+		public Stream Stream
+		{
+			get { return stream; }
+		}
 
 		private string method;
 		public string Method
@@ -41,10 +48,11 @@ namespace WebServer.Models
 			set { response = value; }
 		}
 
-		public Request()
+		public Request(Stream stream)
 		{
 			headers = new Dictionary<string, string>();
 			dispatcher = new Dispatcher();
+			this.stream = stream;
 		}
 
 		public void SetHeader(string key, string value)
@@ -81,7 +89,7 @@ namespace WebServer.Models
 			}
 		}
 
-		public void dispatch()
+		public void dispatch(Stream outputStream)
 		{
 			dispatcher.Dispatch(this);
 		}

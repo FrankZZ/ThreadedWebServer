@@ -13,7 +13,7 @@ namespace WebServer.Models
 
 		private string _mimeType;
 
-		public string mimeType
+		public string MimeType
 		{
 			get { return _mimeType; }
 		}
@@ -37,7 +37,11 @@ namespace WebServer.Models
 		{
 			try 
 			{
-				_fileExtension = Path.GetExtension(URI);
+				_fileExtension = Path.GetExtension(URI).Substring(1);
+				if (MimeTypes.List.ContainsKey(_fileExtension))
+				{
+					_mimeType = MimeTypes.List[_fileExtension];
+				}
 			}
 			catch (Exception ex)
 			{
@@ -47,23 +51,26 @@ namespace WebServer.Models
 
 		}
 
-		public string getContents()
+		public void sendContents(Stream stream)
 		{
-			StringBuilder result = new StringBuilder();
 
-			var buffer = new char[CONTENT_BUFFER_SIZE];
+			var buffer = new byte[CONTENT_BUFFER_SIZE];
+			
+			
 
 
-			using (StreamReader sr = new StreamReader(this.URI))
+			using (FileStream fs = File.OpenRead(this.URI))
 			{
-				
-				while (sr.Read(buffer, 0, buffer.Length) != 0)
+				using (BinaryWriter bw = new BinaryWriter(stream))
 				{
-					result.Append(buffer);
+					int read;
+					while (fs.Read(buffer, 0, buffer.Length) > 0)
+					{
+						bw.Write(buffer);
+					}
 				}
 			}
-
-			return result.ToString();
+		
 		}
 	}
 }

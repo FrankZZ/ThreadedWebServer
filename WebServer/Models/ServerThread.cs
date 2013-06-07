@@ -35,7 +35,7 @@ namespace WebServer.Models
 			{
 				try
 				{
-					var request = new Request();
+					var request = new Request(stream);
 
 					using (StreamReader sr = new StreamReader(stream))
 					{
@@ -67,12 +67,7 @@ namespace WebServer.Models
 								}
 							}
 
-							request.dispatch();
-
-							using (StreamWriter sw = new StreamWriter(stream))
-							{
-								sw.Write(request.Response);
-							}
+							request.dispatch(stream);
 						}
 					}
 				}

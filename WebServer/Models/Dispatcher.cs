@@ -19,6 +19,7 @@ namespace WebServer.Models
 			this.request = request;
 
 			request.Response = response;
+
 			bool isDirectory = false;
 
 			string absolutePath = Path.GetFullPath(Server.WEBROOT + request.Path);
@@ -43,8 +44,11 @@ namespace WebServer.Models
 				try
 				{
 					fr.Parse();
+					
+					response.SetHeader("Content-Type", fr.MimeType);
 
-					response.Body = fr.getContents();
+					fr.sendContents(request.Stream);
+
 				}
 				catch (AccessDeniedException ex)
 				{
