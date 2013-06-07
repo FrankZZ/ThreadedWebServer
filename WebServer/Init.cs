@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebServer.Models;
 
-namespace WebServer
+namespace WebServer.Models
 {
 	/*
 	 * Goed doorlezen: http://bit.ly/1153Eqd
