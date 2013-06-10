@@ -12,47 +12,20 @@ namespace WebServer.Models
 	{
 		private X509Certificate certificate = new X509Certificate("Certificate\\Certificate.pfx", "KTYy77216");
 
-		new public static string WEBROOT = Path.GetFullPath(Environment.CurrentDirectory + @"\WebRoot");
-
 		public SSLServer(string host, int port): base(host, port) {}
 
 		/* Override */
-		override protected void doListen()
+		override protected void handleClient(NetworkStream ns, Socket so)
 		{
-			bool listening = true;
+			Console.WriteLine("[SSL] Handling incoming request");
 
 			try
 			{
-				this.tcpListener.Start();
-			}
-			catch (Exception ex)
-			{
-				listening = false;
-				Console.WriteLine(ex.Message);
-			}
-
-			if (listening)
-			{
-				Console.WriteLine("[SSL] Listening on " + host + ":" + port + "...");
-
-				while (listening)
-				{
-					this.handleClient(this.tcpListener.AcceptTcpClient());
-				}
-
-				this.tcpListener.Stop();
-			}
-		}
-
-		private void handleClient(TcpClient client)
-		{
-			try 
-			{
-				SslStream sslStream = new SslStream(client.GetStream(), false);
+				SslStream sslStream = new SslStream(ns, false);
 
 				sslStream.AuthenticateAsServer(certificate, false, SslProtocols.Ssl3, false);
 
-				new ServerThread(sslStream).Run();
+				new ServerThread(sslStream, so, WEBROOT).Run();
 
 			}
 			catch (Exception ex)

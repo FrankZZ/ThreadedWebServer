@@ -23,10 +23,10 @@ namespace WebServer.Models
 
 			bool isDirectory = false;
 
-			string absolutePath = Path.GetFullPath(Server.WEBROOT + request.Path);
+			string absolutePath = Path.GetFullPath(request.WebRoot + request.Path);
 			
 			// Check for webroot jail breakout
-			if (absolutePath.StartsWith(Server.WEBROOT))
+			if (absolutePath.StartsWith(request.WebRoot))
 			{
 				if (!Path.HasExtension(request.Path))
 				{

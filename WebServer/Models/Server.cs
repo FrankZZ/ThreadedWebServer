@@ -8,19 +8,19 @@ namespace WebServer.Models
 {
 	public class Server
 	{
-		protected string host;
-		protected int port;
-		protected TcpListener tcpListener;
+		protected IPEndPoint serverEP;
+		protected Socket listener;
 
-		public static string WEBROOT = Path.GetFullPath(Environment.CurrentDirectory + @"\WebRoot");
+		virtual protected string WEBROOT 
+		{
+			get { return Path.GetFullPath(Environment.CurrentDirectory + @"\WebRoot"); }
+		}
 
 		public Server(string host, int port)
 		{
-			this.host = host;
-			this.port = port;
+			this.serverEP = new IPEndPoint(IPAddress.Parse(host), port);
 
-			var addr = IPAddress.Parse(host);
-			this.tcpListener = new TcpListener(addr, port);
+			this.listener = new Socket(serverEP.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
 		}
 
@@ -34,10 +34,11 @@ namespace WebServer.Models
 		virtual protected void doListen()
 		{
 			bool listening = true;
-
+			
 			try
 			{
-				tcpListener.Start();
+				listener.Bind(serverEP);
+				listener.Listen(10);
 			}
 			catch (Exception ex)
 			{
@@ -47,15 +48,23 @@ namespace WebServer.Models
 
 			if (listening)
 			{
-				Console.WriteLine("[WEB] Listening on " + host + ":" + port + "...");
+				Console.WriteLine("Listening on " + serverEP.ToString() + "...");
 
 				while (listening)
 				{
-					new ServerThread(tcpListener.AcceptTcpClient().GetStream()).Run();
+					Socket so = listener.Accept();
+					NetworkStream ns = new NetworkStream(so);
+					this.handleClient(ns, so);
 				}
 
-				tcpListener.Stop();
+				//tcpListener.Stop();
 			}
 		}
+
+		virtual protected void handleClient(NetworkStream ns, Socket so)
+		{
+			new ServerThread(ns, so, WEBROOT).Run();
+		}
+
 	}
 }

@@ -10,13 +10,18 @@ namespace WebServer.Models
 		private const int BUFFER_LENGTH = 4096;
 		private const int MAX_HEADER_LENGTH = 256;
 
-		private TcpClient tcpClient;
 		private Thread thread;
+
+		private string webRoot;
+
+		private Socket listener;
 
 		private Stream stream;
 
-		public ServerThread(Stream stream)
+		public ServerThread(Stream stream, Socket listener, string WebRoot)
 		{
+			this.webRoot = WebRoot;
+			this.listener = listener;
 			this.stream = stream;
 			this.thread = new Thread(new ThreadStart(Work));
 		}
@@ -35,7 +40,7 @@ namespace WebServer.Models
 			{
 				try
 				{
-					var request = new Request(stream);
+					var request = new Request(stream, this.webRoot);
 
 					using (StreamReader sr = new StreamReader(stream))
 					{
@@ -67,9 +72,14 @@ namespace WebServer.Models
 								}
 							}
 
-							request.dispatch(this.stream);
+							request.dispatch();
+
+							stream.Flush();
+							stream.Close();
 						}
 					}
+
+					listener.Close();
 				}
 				catch (Exception ex)
 				{

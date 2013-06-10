@@ -6,7 +6,7 @@ namespace WebServer.Models
 {
 	public class Request
 	{
-		private string[] validMethods = {"HEAD", "GET", "POST", "PUT", "DELETE"};
+		private string[] validMethods = {"GET"/*, "POST"*/};
 		private string[] validProtocols = {"HTTP/1.0", "HTTP/1.1"};
 		
 		private Stream stream;
@@ -19,6 +19,12 @@ namespace WebServer.Models
 		public string Method
 		{
 			get { return method; }
+		}
+
+		private string webRoot;
+		public string WebRoot
+		{
+			get { return webRoot; }
 		}
 
 		private string path;
@@ -48,10 +54,11 @@ namespace WebServer.Models
 			set { response = value; }
 		}
 
-		public Request(Stream stream)
+		public Request(Stream stream, string webRoot)
 		{
 			headers = new Dictionary<string, string>();
 			dispatcher = new Dispatcher();
+			this.webRoot = webRoot;
 			this.stream = stream;
 		}
 
@@ -94,7 +101,7 @@ namespace WebServer.Models
 			}
 		}
 
-		public void dispatch(Stream outputStream)
+		public void dispatch()
 		{
 			dispatcher.Dispatch(this);
 		}
