@@ -13,9 +13,11 @@ namespace WebServer.Models
 		private TcpClient tcpClient;
 		private Thread thread;
 
-		public ServerThread(TcpClient tcpClient)
+		private Stream stream;
+
+		public ServerThread(Stream stream)
 		{
-			this.tcpClient = tcpClient;
+			this.stream = stream;
 			this.thread = new Thread(new ThreadStart(Work));
 		}
 
@@ -29,9 +31,7 @@ namespace WebServer.Models
 
 		private void Work()
 		{
-			var stream = tcpClient.GetStream();
-
-			if (stream.CanRead)
+			if (this.stream.CanRead)
 			{
 				try
 				{
@@ -67,7 +67,7 @@ namespace WebServer.Models
 								}
 							}
 
-							request.dispatch(stream);
+							request.dispatch(this.stream);
 						}
 					}
 				}

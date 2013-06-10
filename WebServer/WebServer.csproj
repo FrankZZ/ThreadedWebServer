@@ -45,22 +45,44 @@
     <Compile Include="Exceptions\AccessDeniedException.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="Models\ConfigLoader.cs" />
+    <Compile Include="Models\Server.cs" />
+    <Compile Include="Models\SSLServer.cs" />
     <Compile Include="Models\Dispatcher.cs" />
     <Compile Include="Models\MimeTypes.cs" />
     <Compile Include="Models\Request.cs" />
     <Compile Include="Models\Response.cs" />
-    <Compile Include="Models\Server.cs" />
+    <Compile Include="Models\ControlServer.cs" />
     <Compile Include="Models\ServerThread.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Certificate\Certificate.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WebRoot\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ControlRoot\favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ControlRoot\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ControlRoot\index2.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebRoot\favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebRoot\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebRoot\index2.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

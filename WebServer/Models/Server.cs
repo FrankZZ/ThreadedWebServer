@@ -2,14 +2,15 @@
 using System.Net.Sockets;
 using System.Net;
 using System.IO;
+using System.Threading;
 
 namespace WebServer.Models
 {
 	public class Server
 	{
-		private string host;
-		private int port;
-		private TcpListener tcpListener;
+		protected string host;
+		protected int port;
+		protected TcpListener tcpListener;
 
 		public static string WEBROOT = Path.GetFullPath(Environment.CurrentDirectory + @"\WebRoot");
 
@@ -20,9 +21,17 @@ namespace WebServer.Models
 
 			var addr = IPAddress.Parse(host);
 			this.tcpListener = new TcpListener(addr, port);
+
 		}
 
-		public void listen()
+		public void Run()
+		{
+			Thread thread = new Thread(new ThreadStart(doListen));
+			thread.Start();
+			
+		}
+
+		virtual protected void doListen()
 		{
 			bool listening = true;
 
@@ -38,11 +47,11 @@ namespace WebServer.Models
 
 			if (listening)
 			{
-				Console.WriteLine("Listening on " + host + ":" + port + "...");
+				Console.WriteLine("[WEB] Listening on " + host + ":" + port + "...");
 
 				while (listening)
 				{
-					new ServerThread(tcpListener.AcceptTcpClient()).Run();
+					new ServerThread(tcpListener.AcceptTcpClient().GetStream()).Run();
 				}
 
 				tcpListener.Stop();
