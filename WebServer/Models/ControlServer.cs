@@ -19,7 +19,6 @@ namespace WebServer.Models
 
 		public ControlServer(string host, int port) : base(host, port) { }
 
-		/* Override */
 		override protected void handleClient(NetworkStream ns, Socket so)
 		{
 			Console.WriteLine("[SSL] Handling incoming request");
