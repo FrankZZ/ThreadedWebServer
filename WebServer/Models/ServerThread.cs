@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Web;
 
 namespace WebServer.Models
 {
@@ -58,6 +59,7 @@ namespace WebServer.Models
 						bool isFirst = true;
 						bool isBody = false;
 
+		
 						String line = null;
 
 						while (sr.Peek() >= 0)
@@ -91,12 +93,26 @@ namespace WebServer.Models
 							}
 							else
 							{
-								isBody = true;
+								break; //Body komt eraan
 							}
 
 						}
 
-						//request.dispatch();
+						if (request.Method == "POST")
+						{
+							int length = Convert.ToInt32(request.Headers["Content-Length"]);
+							char[] buffer = new char[length];
+
+							sr.Read(buffer, 0, buffer.Length);
+
+							String body = new String(buffer);
+
+							request.Params = HttpUtility.ParseQueryString(body);
+
+							Console.WriteLine(request.Params.Get("username"));
+						}
+
+						request.dispatch();
 						
 						String ip = ((IPEndPoint)listener.RemoteEndPoint).Address.ToString();
 						

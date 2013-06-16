@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,11 @@ namespace WebServer.Models
 		private string[] validMethods = {"GET", "POST"};
 		private string[] validProtocols = {"HTTP/1.0", "HTTP/1.1"};
 		
-		private String body;
-		public String Body
+		private NameValueCollection _params;
+		public NameValueCollection Params
 		{
-			get { return body; }
+			get { return _params; }
+			set { _params = value; }
 		}
 
 		private Stream stream;
@@ -86,7 +88,7 @@ namespace WebServer.Models
 
 			var parts = line.Split(' ');
 
-			if (parts.Length != 3) Console.WriteLine("HELP ASDKJASDKJSKJSD");
+			if (parts.Length != 3) return;
 
 			if (validMethods.Contains(parts[0]))
 			{
@@ -109,11 +111,6 @@ namespace WebServer.Models
 			{
 				SetHeader(parts[0], parts[1]);
 			}
-		}
-
-		public void ParseBody(string line)
-		{
-			Console.WriteLine("BODYLIJN! " + line.Trim());
 		}
 
 		public void dispatch()
