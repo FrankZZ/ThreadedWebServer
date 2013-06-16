@@ -18,73 +18,92 @@ namespace WebServer.Models
 		public void Dispatch(Request request)
 		{
 			this.request = request;
-
 			request.Response = response;
 
-			bool isDirectory = false;
+			int status = CheckStatus();
 
-			string absolutePath = Path.GetFullPath(request.WebRoot + request.Path);
-			
-			// Check for webroot jail breakout
+			if (status != 200)
+			{
+				Console.WriteLine("Error");
+				WriteError(status);
+			}
+		}
+
+		private int CheckStatus()
+		{
+			string targetPath = request.WebRoot + request.Path;
+			string absolutePath = Path.GetFullPath(targetPath);
+
 			if (absolutePath.StartsWith(request.WebRoot))
 			{
 				if (!Path.HasExtension(request.Path))
 				{
-					if (!absolutePath.EndsWith("/"))
-					{
-						absolutePath += "/";
-					}
-
+					if (!absolutePath.EndsWith("/")) absolutePath += "/";
 					absolutePath += "index.html";
-					Console.WriteLine(absolutePath);
-					isDirectory = true;
 				}
 
-				try
+				if (File.Exists(absolutePath))
 				{
 					String fileExtension = Path.GetExtension(absolutePath).Substring(1);
-					
+
 					if (MimeTypes.List.ContainsKey(fileExtension))
 					{
 						response.SetHeader("Content-Type", MimeTypes.List[fileExtension]);
 					}
 
-					var buffer = new byte[1024];
-					var stream = request.Stream;
-
-					using (FileStream fs = File.OpenRead(absolutePath))
+					if (WriteFile(absolutePath))
 					{
-
-						byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
-						
-						stream.Write(headers, 0, headers.Length);
-						
-						while (fs.Read(buffer, 0, buffer.Length) > 0)
-						{
-							stream.Write(buffer, 0, buffer.Length);
-						}
-
-						stream.Flush();
+						return 200;
 					}
-
 				}
-				catch (AccessDeniedException ex)
+
+				return 404;
+			}
+
+			return 500;
+		}
+
+		private void WriteError(int status)
+		{
+			response.SetHeader("Content-Type", MimeTypes.List["html"]);
+
+			string data = "<h2>Error " + status + "</h2>";
+
+			byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
+			byte[] body = Encoding.UTF8.GetBytes(data);
+
+			if (request.Stream.CanWrite)
+			{
+				request.Stream.Write(headers, 0, headers.Length);
+				request.Stream.Write(body, 0, body.Length);
+			}
+		}
+
+		private bool WriteFile(string file)
+		{
+			try
+			{
+				var buffer = new byte[1024];
+				var stream = request.Stream;
+
+				using (FileStream fs = File.OpenRead(file))
 				{
-					response.Status = 404; // Not found
-				}
-				catch (FileNotFoundException ex)
-				{
-					if (isDirectory)
-					{
-						// index.html not found in the directory
+					byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
+					stream.Write(headers, 0, headers.Length);
 
-						response.Status = 403; // Forbidden
-					}
-					else
+					while (request.Stream.CanWrite && fs.Read(buffer, 0, buffer.Length) > 0)
 					{
-						response.Status = 404; // Not found
+						request.Stream.Write(buffer, 0, buffer.Length);
 					}
+
+					stream.Flush();
 				}
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				return false;
 			}
 		}
 	}

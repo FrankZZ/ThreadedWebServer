@@ -28,13 +28,6 @@ namespace WebServer.Models
 			get { return headers; }
 		}
 
-		private string body;
-		public string Body
-		{
-			set { body = value; }
-			get { return body; }
-		}
-
 		public Response()
 		{
 			headers = new Dictionary<string, string>()
@@ -56,7 +49,6 @@ namespace WebServer.Models
 			}
 
 			string result = String.Join("\r\n", lines);
-			// 2 newlines voor seperator: headers - body
 			result += "\r\n\r\n";
 
 			Console.WriteLine(result);
