@@ -6,6 +6,8 @@ namespace WebServer.Models
 	{
 		public static void Main(string[] args)
 		{
+			new LoggerQueue();
+			
 			var config = new ConfigLoader("Config.xml").Read();
 
 			var server = new Server(

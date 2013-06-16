@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -36,6 +38,10 @@ namespace WebServer.Models
 
 		private void Work()
 		{
+			Stopwatch stopwatch = new Stopwatch();
+
+			stopwatch.Start();
+
 			if (this.stream.CanRead)
 			{
 				try
@@ -73,19 +79,27 @@ namespace WebServer.Models
 							}
 
 							request.dispatch();
-
-							stream.Flush();
-							stream.Close();
+							
+							stream.Dispose();
 						}
 					}
-
+					String ip = ((IPEndPoint)listener.RemoteEndPoint).Address.ToString();
 					listener.Close();
+
+					stopwatch.Stop();
+
+					
+
+					LoggerQueue.Add(ip + " - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " - " + stopwatch.ElapsedMilliseconds + "ms" + ": " + request.Method + " " + request.Path);
+
 				}
 				catch (Exception ex)
 				{
 					Console.WriteLine(ex.Message);
 				}
 			}
+
+
 		}
 
 		public void Dispose()

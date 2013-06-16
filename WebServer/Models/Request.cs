@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace WebServer.Models
 {
@@ -9,6 +11,12 @@ namespace WebServer.Models
 		private string[] validMethods = {"GET"/*, "POST"*/};
 		private string[] validProtocols = {"HTTP/1.0", "HTTP/1.1"};
 		
+		private String body;
+		public String Body
+		{
+			get { return body; }
+		}
+
 		private Stream stream;
 		public Stream Stream
 		{
@@ -60,6 +68,8 @@ namespace WebServer.Models
 			dispatcher = new Dispatcher();
 			this.webRoot = webRoot;
 			this.stream = stream;
+
+			//this.getBody();
 		}
 
 		public void SetHeader(string key, string value)
@@ -74,6 +84,8 @@ namespace WebServer.Models
 
 		public void ParseRequest(string line)
 		{
+			Console.WriteLine("Request: " + line);
+
 			var parts = line.Split(' ');
 
 			if (parts.Length != 3) return;
@@ -99,6 +111,16 @@ namespace WebServer.Models
 			{
 				SetHeader(parts[0], parts[1]);
 			}
+		}
+
+		public void getBody()
+		{
+			using (StreamReader sr = new StreamReader(this.stream))
+			{
+				this.body = sr.ReadToEnd();
+			}
+
+			Console.WriteLine(this.body);
 		}
 
 		public void dispatch()

@@ -51,7 +51,7 @@ namespace WebServer.Models
 			string result = String.Join("\r\n", lines);
 			result += "\r\n\r\n";
 
-			Console.WriteLine(result);
+			//Console.WriteLine(result);
 
 			return result;
 		}

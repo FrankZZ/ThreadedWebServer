@@ -66,7 +66,7 @@
     <Compile Include="Exceptions\AccessDeniedException.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="Models\ConfigLoader.cs" />
-    <Compile Include="Models\RequestLogger.cs" />
+    <Compile Include="Models\LoggerQueue.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="Models\Dispatcher.cs" />
     <Compile Include="Models\MimeTypes.cs" />
