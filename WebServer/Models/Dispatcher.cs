@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using WebServer.Exceptions;
 
 namespace WebServer.Models
@@ -9,6 +10,8 @@ namespace WebServer.Models
 	{
 		private Request request;
 		private Response response;
+
+		private const string ERROR_PATH = "Errors";
 
 		public Dispatcher()
 		{
@@ -74,16 +77,27 @@ namespace WebServer.Models
 		private void WriteError(int status)
 		{
 			response.SetHeader("Content-Type", MimeTypes.List["html"]);
+			response.Status = status;
 
-			string data = "<h2>Error " + status + "</h2>";
+			string file = Application.StartupPath + @"\" + ERROR_PATH + @"\" + status + ".html";
 
-			byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
-			byte[] body = Encoding.UTF8.GetBytes(data);
-
-			if (request.Stream.CanWrite)
+			if (File.Exists(file))
 			{
-				request.Stream.Write(headers, 0, headers.Length);
-				request.Stream.Write(body, 0, body.Length);
+				string data = null;
+
+				using (var sr = new StreamReader(file))
+				{
+					data = sr.ReadToEnd();
+				}
+
+				byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
+				byte[] body = Encoding.UTF8.GetBytes(data);
+
+				if (request.Stream.CanWrite)
+				{
+					request.Stream.Write(headers, 0, headers.Length);
+					request.Stream.Write(body, 0, body.Length);
+				}
 			}
 		}
 
