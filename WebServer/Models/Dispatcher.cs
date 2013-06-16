@@ -31,12 +31,20 @@ namespace WebServer.Models
 
 		private int CheckStatus()
 		{
-			string targetPath = request.WebRoot + request.Path;
+			string requestPath = request.Path;
+			int index = requestPath.IndexOf("?");
+
+			if (index > 0)
+			{
+				requestPath = requestPath.Substring(0, index);
+			}
+
+			string targetPath = request.WebRoot + requestPath;
 			string absolutePath = Path.GetFullPath(targetPath);
 
 			if (absolutePath.StartsWith(request.WebRoot))
 			{
-				if (!Path.HasExtension(request.Path))
+				if (!Path.HasExtension(requestPath))
 				{
 					if (!absolutePath.EndsWith("/")) absolutePath += "/";
 					absolutePath += "index.html";
