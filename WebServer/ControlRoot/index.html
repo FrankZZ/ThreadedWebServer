@@ -1,15 +1,18 @@
 <!doctype html>
-<html>
+<html lang="nl">
 	<head>
-		<title>Multithreaded Webserver Jim Franke &amp; Frank Wammes</title>
+		<meta charset="utf-8" />
+		<title>ControlServer</title>
 	</head>
 	<body>
-		<h1>Control It works!</h1>
-		<hr /><p>Multithreaded Webserver Jim Franke &amp; Frank Wammes</p>
-		<form action="index.html" method="post">
-			<input type="text" />
-			<input type="submit" />
-
-		</form>
+		<h1>Controlserver Inloggen</h1>
+        <form method="post">
+            <input type="text" name="username" size="25" value="" />
+            <p><input type="password" name="password" size="25" value="" /></p>
+            <input type="submit" value="Inloggen" />
+        </form>
+        <script>
+            document.forms[0].username.focus();
+        </script>
 	</body>
 </html>
