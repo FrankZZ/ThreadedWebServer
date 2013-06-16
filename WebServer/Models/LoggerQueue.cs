@@ -35,8 +35,6 @@ namespace WebServer.Models
 				
 				logIdx++;
 				logQueue[logIdx] = line;
-				Console.WriteLine(logIdx);
-				
 			}
 
 			wh.Set();
@@ -69,7 +67,7 @@ namespace WebServer.Models
 
 				if (line != null)
 				{
-					Console.WriteLine("Writing to file: " + line);
+					//Console.WriteLine("Writing to file: " + line);
 
 					// Write the string to a file.
 					
@@ -77,11 +75,11 @@ namespace WebServer.Models
 					{
 						sw.WriteLine(line);
 					}
-					Console.WriteLine("Done: " + line);
+					//Console.WriteLine("Done: " + line);
 				}
 				else
 				{
-					Console.WriteLine("Nothing to write, sleeping...");
+					//Console.WriteLine("Nothing to write, sleeping...");
 					wh.WaitOne();
 				}
 

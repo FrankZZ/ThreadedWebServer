@@ -8,7 +8,7 @@ namespace WebServer.Models
 {
 	public class Request
 	{
-		private string[] validMethods = {"GET"/*, "POST"*/};
+		private string[] validMethods = {"GET", "POST"};
 		private string[] validProtocols = {"HTTP/1.0", "HTTP/1.1"};
 		
 		private String body;
@@ -68,8 +68,6 @@ namespace WebServer.Models
 			dispatcher = new Dispatcher();
 			this.webRoot = webRoot;
 			this.stream = stream;
-
-			//this.getBody();
 		}
 
 		public void SetHeader(string key, string value)
@@ -88,14 +86,14 @@ namespace WebServer.Models
 
 			var parts = line.Split(' ');
 
-			if (parts.Length != 3) return;
+			if (parts.Length != 3) Console.WriteLine("HELP ASDKJASDKJSKJSD");
 
 			if (validMethods.Contains(parts[0]))
 			{
 				method = parts[0];
 			}
 
-			path = parts[1];
+			this.path = parts[1];
 
 			if (validProtocols.Contains(parts[2]))
 			{
@@ -105,7 +103,7 @@ namespace WebServer.Models
 
 		public void ParseHeader(string line)
 		{
-			var parts = line.Split(':');
+			var parts = line.Split(new char[] { ':' }, 2);
 
 			if (parts.Length == 2)
 			{
@@ -113,14 +111,9 @@ namespace WebServer.Models
 			}
 		}
 
-		public void getBody()
+		public void ParseBody(string line)
 		{
-			using (StreamReader sr = new StreamReader(this.stream))
-			{
-				this.body = sr.ReadToEnd();
-			}
-
-			Console.WriteLine(this.body);
+			Console.WriteLine("BODYLIJN! " + line.Trim());
 		}
 
 		public void dispatch()

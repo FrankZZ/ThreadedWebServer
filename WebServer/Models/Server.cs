@@ -21,14 +21,12 @@ namespace WebServer.Models
 			this.serverEP = new IPEndPoint(IPAddress.Parse(host), port);
 
 			this.listener = new Socket(serverEP.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
 		}
 
 		public void Run()
 		{
 			Thread thread = new Thread(new ThreadStart(doListen));
 			thread.Start();
-			
 		}
 
 		virtual protected void doListen()
@@ -65,6 +63,5 @@ namespace WebServer.Models
 		{
 			new ServerThread(ns, so, WEBROOT).Run();
 		}
-
 	}
 }

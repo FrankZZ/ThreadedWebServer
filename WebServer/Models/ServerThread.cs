@@ -3,13 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace WebServer.Models
 {
 	public class ServerThread : IDisposable
 	{
-		private const int BUFFER_LENGTH = 4096;
+		private const int BUFFER_LENGTH = 256;
 		private const int MAX_HEADER_LENGTH = 256;
 
 		private Thread thread;
@@ -39,7 +40,6 @@ namespace WebServer.Models
 		private void Work()
 		{
 			Stopwatch stopwatch = new Stopwatch();
-
 			stopwatch.Start();
 
 			if (this.stream.CanRead)
@@ -50,56 +50,78 @@ namespace WebServer.Models
 
 					using (StreamReader sr = new StreamReader(stream))
 					{
-						if (sr.Peek() > 0)
+						if (sr.Peek() < 0)
 						{
-							var buffer = new char[BUFFER_LENGTH];
-							sr.Read(buffer, 0, buffer.Length);
+							return;
+						}
 
-							var lines = new String(buffer).Trim().Split('\n');
-							bool isFirst = true;
+						bool isFirst = true;
+						bool isBody = false;
 
-							foreach (string value in lines)
+						String line = null;
+
+						while (sr.Peek() >= 0)
+						{
+
+							line = sr.ReadLine();
+
+							if (!String.IsNullOrEmpty(line))
 							{
-								string line = value.Trim();
+								Console.WriteLine("Line: " + line);
 
-								if (!String.IsNullOrEmpty(line) && line.Length < MAX_HEADER_LENGTH)
+								if (isBody)
 								{
-									Console.WriteLine(line);
-
-									if (isFirst)
+									Console.WriteLine("Body!!!");
+								}
+								else
+								{
+									if (line.Length < MAX_HEADER_LENGTH)
 									{
-										request.ParseRequest(line);
-										isFirst = false;
+										if (isFirst)
+										{
+											request.ParseRequest(line);
+											isFirst = false;
 
-										continue;
+											continue;
+										}
+
+										request.ParseHeader(line);
 									}
-
-									request.ParseHeader(line);
 								}
 							}
+							else
+							{
+								isBody = true;
+							}
 
-							request.dispatch();
-							
-							stream.Dispose();
 						}
+
+						//request.dispatch();
+						
+						String ip = ((IPEndPoint)listener.RemoteEndPoint).Address.ToString();
+						
+						listener.Close();
+						stream.Dispose();
+						
+						this.Log(stopwatch, request, ip);
 					}
-					String ip = ((IPEndPoint)listener.RemoteEndPoint).Address.ToString();
-					listener.Close();
 
-					stopwatch.Stop();
-
+					Console.WriteLine("-");
 					
-
-					LoggerQueue.Add(ip + " - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " - " + stopwatch.ElapsedMilliseconds + "ms" + ": " + request.Method + " " + request.Path);
-
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine(ex.Message);
+					Console.WriteLine(ex);
 				}
 			}
+		}
 
+		private void Log(Stopwatch stopwatch, Request request, String ip)
+		{
+			stopwatch.Stop();
 
+			LoggerQueue.Add(ip + " - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " - "
+				+ stopwatch.ElapsedMilliseconds + "ms" + ": " + request.Method + " " + request.Path);
 		}
 
 		public void Dispose()

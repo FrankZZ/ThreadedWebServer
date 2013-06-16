@@ -21,8 +21,6 @@ namespace WebServer.Models
 
 		override protected void handleClient(NetworkStream ns, Socket so)
 		{
-			Console.WriteLine("[SSL] Handling incoming request");
-
 			try
 			{
 				SslStream sslStream = new SslStream(ns, false);
@@ -34,8 +32,10 @@ namespace WebServer.Models
 			}
 			catch (Exception ex)
 			{
-
+				Console.WriteLine(ex);
 			}
+
+			return;
 		}
 	}
 }
