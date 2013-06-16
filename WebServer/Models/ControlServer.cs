@@ -14,7 +14,7 @@ namespace WebServer.Models
 
 		override protected string WEBROOT
 		{
-			get { return Path.GetFullPath(Environment.CurrentDirectory + @"\ControlWebRoot"); }
+			get { return Path.GetFullPath(Environment.CurrentDirectory + @"\ControlRoot"); }
 		}
 
 		public ControlServer(string host, int port) : base(host, port) { }

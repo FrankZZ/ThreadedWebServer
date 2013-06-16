@@ -15,7 +15,7 @@ namespace WebServer.Models
 
 			var controlServer = new ControlServer(
 				config.GetEntry("Host"),
-				Convert.ToInt32(config.GetEntry("Port")) + 1
+				Convert.ToInt32(config.GetEntry("SSLPort"))
 			);
 
 			server.Run();
