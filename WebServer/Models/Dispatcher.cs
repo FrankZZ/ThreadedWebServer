@@ -102,7 +102,34 @@ namespace WebServer.Models
 				if (!Path.HasExtension(requestPath))
 				{
 					if (!absolutePath.EndsWith("/")) absolutePath += "/";
-					absolutePath += "index.html";
+					
+
+					if (Directory.Exists(absolutePath))
+					{
+						if (File.Exists(absolutePath + "index.html"))
+						{
+							absolutePath += "index.html";
+						}
+						else
+						{
+							String data = DirectoryListing.Generate(absolutePath);
+
+							response.SetHeader("Content-Type", MimeTypes.List["html"]);
+
+							byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
+							byte[] body = Encoding.UTF8.GetBytes(data);
+
+							if (request.Stream.CanWrite)
+							{
+								request.Stream.Write(headers, 0, headers.Length);
+								request.Stream.Write(body, 0, body.Length);
+
+								return 200;
+							}
+						}
+					
+					}
+
 				}
 
 				if (File.Exists(absolutePath))
