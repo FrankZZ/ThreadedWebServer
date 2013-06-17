@@ -104,17 +104,14 @@ namespace WebServer.Models
 							char[] buffer = new char[length];
 
 							sr.Read(buffer, 0, buffer.Length);
-
 							String body = new String(buffer);
 
 							request.Params = HttpUtility.ParseQueryString(body);
-
-							Console.WriteLine(request.Params.Get("username"));
 						}
 
 						request.dispatch();
 						
-						String ip = ((IPEndPoint)listener.RemoteEndPoint).Address.ToString();
+						String ip = ((IPEndPoint) listener.RemoteEndPoint).Address.ToString();
 						
 						listener.Close();
 						stream.Dispose();

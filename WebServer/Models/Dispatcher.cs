@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using WebServer.Exceptions;
@@ -21,6 +22,30 @@ namespace WebServer.Models
 		public void Dispatch(Request request)
 		{
 			this.request = request;
+
+			if (request.Method == "POST")
+			{
+				if (request.Path == "/index.html")
+				{
+					DispatchLogin();
+				}
+				else if (request.Path == "/index2.html") // Config
+				{
+					DispatchConfig();
+				}
+			}
+			else
+			{
+				if (request.Path == "/index2.html") // Config
+				{
+					if (request.Headers.ContainsKey("Cookie"))
+					{
+						String cookie = request.Headers["Cookie"];
+						var values = Cookie.Parse(cookie);
+					}
+				}
+			}
+
 			request.Response = response;
 
 			int status = CheckStatus();
@@ -30,6 +55,33 @@ namespace WebServer.Models
 				Console.WriteLine("Error");
 				WriteError(status);
 			}
+		}
+
+		private void DispatchLogin()
+		{
+			var user = request.Params.Get("username");
+			var pass = request.Params.Get("password");
+			var token = request.Params.Get("token");
+
+			Session sess = null;
+
+			if (request.Headers.ContainsKey("Cookie"))
+			{
+				String cookie = request.Headers["Cookie"];
+				var values = Cookie.Parse(cookie);
+			}
+			else
+			{
+				sess = Session.New();
+
+				this.response.Headers.Add("Set-Cookie",
+					"SessID=" + sess.Id + "; Expires=Wed, 09 Jun 2021 10:18:14 GMT; secure");
+			}
+		}
+
+		private void DispatchConfig()
+		{
+			// Empty
 		}
 
 		private int CheckStatus()
