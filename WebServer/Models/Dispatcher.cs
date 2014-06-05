@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Web;
 using System.Windows.Forms;
 using WebServer.Exceptions;
 
@@ -38,12 +39,13 @@ namespace WebServer.Models
 			{
 				if (request.Path == "/index2.html") // Config
 				{
-					if (request.Headers.ContainsKey("Cookie"))
+
+/*					if (request.Headers.ContainsKey("Cookie"))
 					{
 						String cookie = request.Headers["Cookie"];
 						var values = Cookie.Parse(cookie);
 					}
-				}
+*/				}
 			}
 
 			request.Response = response;
@@ -63,7 +65,7 @@ namespace WebServer.Models
 			var pass = request.Params.Get("password");
 			var token = request.Params.Get("token");
 
-			Session sess = null;
+/*			Session sess = null;
 
 			if (request.Headers.ContainsKey("Cookie"))
 			{
@@ -77,7 +79,7 @@ namespace WebServer.Models
 				this.response.Headers.Add("Set-Cookie",
 					"SessID=" + sess.Id + "; Expires=Wed, 09 Jun 2021 10:18:14 GMT; secure");
 			}
-		}
+*/		}
 
 		private void DispatchConfig()
 		{

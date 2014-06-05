@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace WebServer.Models
 {
@@ -17,6 +18,12 @@ namespace WebServer.Models
 		{
 			get { return _params; }
 			set { _params = value; }
+		}
+
+		public HttpCookie Cookie
+		{
+			private set;
+			get;
 		}
 
 		private Stream stream;
@@ -110,7 +117,18 @@ namespace WebServer.Models
 			if (parts.Length == 2)
 			{
 				SetHeader(parts[0], parts[1]);
+				
+				if (parts[0] == "Cookie")
+				{
+					Cookie.ParseCookie(parts[1]);
+				}
 			}
+		}
+
+
+		private void SetCookie(string cookieString)
+		{
+
 		}
 
 		public void dispatch()
