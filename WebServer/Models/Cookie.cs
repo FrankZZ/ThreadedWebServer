@@ -8,31 +8,30 @@ using WebServer.Exceptions;
 
 namespace WebServer.Models
 {
-	class Cookie
+	public class Cookie
 	{
-		private static Dictionary<string, HttpCookie> _cookies;
-
-		public static HttpCookie GetCookie(string cookieId)
+		public static string GetSessionIdFromString(string cookieString)
 		{
-			if (!_cookies.ContainsKey(cookieId))
-				throw (new CookieNotFoundException());
+			Dictionary<string, string> values = new Dictionary<string, string>();
 
-			return _cookies[cookieId];
-		}
-
-		public static HttpCookie ParseCookie(string cookieString)
-		{
-			HttpCookie cookie = new HttpCookie();
-
-			var variables = cookieString.Split(new char[] { ';' });
+			string[] variables = cookieString.Split(new char[] { ';' });
 
 			foreach (string part in variables)
 			{
+				part.Trim();
+
 				string[] keyval = part.Split(new char[] { ':' }, 2);
-				cookie[keyval[0]] = keyval[1];
+				
+				if (keyval.Length == 2)
+				{
+					if (keyval[0] == "SessId")
+						return keyval[1];
+				}
+				else
+					throw(new ArgumentException("Invalid cookie"));
 			}
 
-			return cookie;
+			return "";
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -26,6 +27,7 @@ namespace WebServer.Models
 
 			if (request.Method == "POST")
 			{
+				//request.
 				if (request.Path == "/index.html")
 				{
 					DispatchLogin();
@@ -65,21 +67,21 @@ namespace WebServer.Models
 			var pass = request.Params.Get("password");
 			var token = request.Params.Get("token");
 
-/*			Session sess = null;
+			Session sess = null;
 
 			if (request.Headers.ContainsKey("Cookie"))
 			{
 				String cookie = request.Headers["Cookie"];
-				var values = Cookie.Parse(cookie);
+				string sessionId = Cookie.GetSessionIdFromString(cookie);
 			}
 			else
 			{
-				sess = Session.New();
+				sess = Session.Initialize();
+				HttpCookie cookie = new HttpCookie(sess.Id);
 
-				this.response.Headers.Add("Set-Cookie",
-					"SessID=" + sess.Id + "; Expires=Wed, 09 Jun 2021 10:18:14 GMT; secure");
+				this.response.Headers.Add("Set-Cookie", "SessId=" + sess.Id + "; Expires=" + DateTime.Now.AddMinutes(10).ToString() + "; secure");
 			}
-*/		}
+		}
 
 		private void DispatchConfig()
 		{
@@ -164,21 +166,7 @@ namespace WebServer.Models
 
 			if (File.Exists(file))
 			{
-				string data = null;
-
-				using (var sr = new StreamReader(file))
-				{
-					data = sr.ReadToEnd();
-				}
-
-				byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
-				byte[] body = Encoding.UTF8.GetBytes(data);
-
-				if (request.Stream.CanWrite)
-				{
-					request.Stream.Write(headers, 0, headers.Length);
-					request.Stream.Write(body, 0, body.Length);
-				}
+				WriteFile(file);
 			}
 		}
 
@@ -186,17 +174,18 @@ namespace WebServer.Models
 		{
 			try
 			{
-				var buffer = new byte[1024];
+				var buffer = new byte[128];
 				var stream = request.Stream;
 
 				using (FileStream fs = File.OpenRead(file))
 				{
 					byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
 					stream.Write(headers, 0, headers.Length);
+					int hasRead;
 
-					while (request.Stream.CanWrite && fs.Read(buffer, 0, buffer.Length) > 0)
+					while (request.Stream.CanWrite && (hasRead = fs.Read(buffer, 0, buffer.Length)) > 0)
 					{
-						request.Stream.Write(buffer, 0, buffer.Length);
+						request.Stream.Write(buffer, 0, hasRead);
 					}
 
 					stream.Flush();

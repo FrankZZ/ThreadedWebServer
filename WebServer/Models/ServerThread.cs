@@ -58,8 +58,6 @@ namespace WebServer.Models
 
 						bool isFirst = true;
 						bool isBody = false;
-
-		
 						String line = null;
 
 						while (sr.Peek() >= 0)

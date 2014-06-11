@@ -120,7 +120,7 @@ namespace WebServer.Models
 				
 				if (parts[0] == "Cookie")
 				{
-					Cookie.ParseCookie(parts[1]);
+					//WebServer.Models.Cookie.GetSessionIdFromString(parts[1]);
 				}
 			}
 		}

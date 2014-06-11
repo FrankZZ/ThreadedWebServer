@@ -17,9 +17,18 @@ namespace WebServer.Models
 
 			for(int i = 0; i<dirList.Length; i++)
 			{
-				String dir = dirList[i];
+				String dir = dirList[i].Substring(pathString.Length);
 
-				dir += "<li><a href=\"./" + dir + "\">" + dir + "</a></li>";
+				html += "<li><a href=\"./" + dir + "\">" + dir + "</a></li>";
+			}
+
+			String[] fileList = Directory.GetFiles(pathString);
+
+			for (int i = 0; i < fileList.Length; i++)
+			{
+				String file = fileList[i].Substring(pathString.Length);
+
+				html += "<li><a href=\"./" + file + "\">" + file + "</a></li>";
 			}
 
 			html += "</ul>";
