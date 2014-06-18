@@ -66,8 +66,8 @@ namespace WebServer.Models
 								}
 								else
 								{
-									if (request.Params["directoryBrowsing"] != "true" || request.Params["directoryBrowsing"] != "false")
-										status = 500;
+									if (request.Params["directoryBrowsing"] != "true" && request.Params["directoryBrowsing"] != "false")
+										throw new ArgumentException("Invalid");
 									else
 									{
 										Configuration.Entries.controlPort = request.Params["controlPort"];
