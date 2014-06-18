@@ -20,10 +20,10 @@ namespace WebServer.Models
 			set { _params = value; }
 		}
 
-		public HttpCookie Cookie
+		public string SessionId
 		{
-			private set;
 			get;
+			set;
 		}
 
 		private Stream stream;
@@ -91,7 +91,7 @@ namespace WebServer.Models
 
 		public void ParseRequest(string line)
 		{
-			Console.WriteLine("Request: " + line);
+			//Console.WriteLine("Request: " + line);
 
 			var parts = line.Split(' ');
 
@@ -103,6 +103,9 @@ namespace WebServer.Models
 			}
 
 			this.path = parts[1];
+
+			if (this.path == "/")
+				this.path = "/index.html";
 
 			if (validProtocols.Contains(parts[2]))
 			{
@@ -120,15 +123,9 @@ namespace WebServer.Models
 				
 				if (parts[0] == "Cookie")
 				{
-					//WebServer.Models.Cookie.GetSessionIdFromString(parts[1]);
+					this.SessionId = WebServer.Models.Cookie.GetSessionIdFromString(parts[1]);
 				}
 			}
-		}
-
-
-		private void SetCookie(string cookieString)
-		{
-
 		}
 
 		public void dispatch()

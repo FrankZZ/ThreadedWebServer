@@ -8,17 +8,30 @@ namespace WebServer.Models
 		{
 			new LoggerQueue();
 			
-			var config = new ConfigLoader("Config.xml").Read();
+			Configuration.Initialize();
+			Configuration.Read();
+			
+			/*
+			ConfigLoader.Entries.Host = "127.0.0.1";
+			ConfigLoader.Entries.webPort = "3333";
+			ConfigLoader.Entries.controlPort = "3334";
+			ConfigLoader.Entries.directoryBrowsing = "true";
+			ConfigLoader.Entries.defaultPage = "index.html";
+			
+			ConfigLoader.Write();
+			*/
 
 			var server = new Server(
-				config.GetEntry("Host"), 
-				Convert.ToInt32(config.GetEntry("Port"))
+				Configuration.Entries.Host,
+				Convert.ToInt32(Configuration.Entries.webPort)
 			);
 
 			var controlServer = new ControlServer(
-				config.GetEntry("Host"),
-				Convert.ToInt32(config.GetEntry("SSLPort"))
+				Configuration.Entries.Host,
+				Convert.ToInt32(Configuration.Entries.controlPort)
 			);
+
+			// new Database().RegisterUser("frank", "tester");
 
 			server.Run();
 			controlServer.Run();

@@ -8,6 +8,7 @@ namespace WebServer.Models
 		private static Dictionary<int, string> statuses = new Dictionary<int, string>()
 		{
 			{ 200, "OK" },
+			{ 302, "Found"},
 			{ 400, "Bad Request"},
 			{ 403, "Forbidden" },
 			{ 404, "Not Found" }
@@ -51,7 +52,7 @@ namespace WebServer.Models
 			string result = String.Join("\r\n", lines);
 			result += "\r\n\r\n";
 
-			Console.WriteLine(result);
+			//Console.WriteLine(result);
 
 			return result;
 		}

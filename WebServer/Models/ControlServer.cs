@@ -14,7 +14,7 @@ namespace WebServer.Models
 
 		override protected string WEBROOT
 		{
-			get { return Path.GetFullPath(Environment.CurrentDirectory + @"\ControlRoot"); }
+			get { return Constants.CONTROL_WEBROOT; }
 		}
 
 		public ControlServer(string host, int port) : base(host, port) { }
@@ -32,10 +32,11 @@ namespace WebServer.Models
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex);
+				LoggerQueue.Put(ex.Message);
 			}
 
 			return;
 		}
+
 	}
 }

@@ -67,11 +67,11 @@ namespace WebServer.Models
 
 							if (!String.IsNullOrEmpty(line))
 							{
-								Console.WriteLine("Line: " + line);
+								//Console.WriteLine("Line: " + line);
 
 								if (isBody)
 								{
-									Console.WriteLine("Body!!!");
+									Console.WriteLine(line);
 								}
 								else
 								{
@@ -91,6 +91,7 @@ namespace WebServer.Models
 							}
 							else
 							{
+								isBody = true;
 								break; //Body komt eraan
 							}
 
@@ -117,12 +118,12 @@ namespace WebServer.Models
 						this.Log(stopwatch, request, ip);
 					}
 
-					Console.WriteLine("-");
+					//Console.WriteLine("-");
 					
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine(ex);
+					LoggerQueue.Put(ex.Message);
 				}
 			}
 		}
@@ -131,7 +132,7 @@ namespace WebServer.Models
 		{
 			stopwatch.Stop();
 
-			LoggerQueue.Add(ip + " - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " - "
+			LoggerQueue.Put(ip + " - "
 				+ stopwatch.ElapsedMilliseconds + "ms" + ": " + request.Method + " " + request.Path);
 		}
 

@@ -18,9 +18,8 @@ namespace WebServer.Models
 
 			foreach (string part in variables)
 			{
-				part.Trim();
-
-				string[] keyval = part.Split(new char[] { ':' }, 2);
+				
+				string[] keyval = part.Trim().Split(new char[] { '=' }, 2);
 				
 				if (keyval.Length == 2)
 				{
@@ -31,7 +30,7 @@ namespace WebServer.Models
 					throw(new ArgumentException("Invalid cookie"));
 			}
 
-			return "";
+			return "error";
 		}
 	}
 }

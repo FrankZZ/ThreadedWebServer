@@ -13,7 +13,7 @@ namespace WebServer.Models
 
 		virtual protected string WEBROOT 
 		{
-			get { return Path.GetFullPath(Environment.CurrentDirectory + @"\WebRoot"); }
+			get { return Constants.WEBROOT; }
 		}
 
 		public Server(string host, int port)
@@ -41,12 +41,12 @@ namespace WebServer.Models
 			catch (Exception ex)
 			{
 				listening = false;
-				Console.WriteLine(ex.Message);
+				LoggerQueue.Put(ex.Message);
 			}
 
 			if (listening)
 			{
-				Console.WriteLine("Listening on " + serverEP.ToString() + "...");
+				LoggerQueue.Put("Listening on " + serverEP.ToString() + "...");
 
 				while (listening)
 				{

@@ -53,6 +53,9 @@
     <ApplicationIcon>ControlRoot\favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -67,7 +70,8 @@
     <Compile Include="Exceptions\AccessDeniedException.cs" />
     <Compile Include="Exceptions\CookieNotFoundException.cs" />
     <Compile Include="Init.cs" />
-    <Compile Include="Models\ConfigLoader.cs" />
+    <Compile Include="Models\Configuration.cs" />
+    <Compile Include="Models\Constants.cs" />
     <Compile Include="Models\Cookie.cs" />
     <Compile Include="Models\Database.cs" />
     <Compile Include="Models\DirectoryListing.cs" />
@@ -80,6 +84,8 @@
     <Compile Include="Models\ControlServer.cs" />
     <Compile Include="Models\ServerThread.cs" />
     <Compile Include="Models\Session.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\XMLSettingsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +129,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ControlRoot\index2.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Errors\404_errorpage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Errors\404.html">

@@ -9,26 +9,30 @@ namespace WebServer.Models
 {
 	public class DirectoryListing
 	{
-		public static String Generate(String pathString)
+		public static String Generate(String rootPathString, String pathString)
 		{
+			pathString = pathString.TrimEnd('/');
+
 			String html = "<ul>";
 
 			String[] dirList = Directory.GetDirectories(pathString);
 
 			for(int i = 0; i<dirList.Length; i++)
 			{
+				String url = dirList[i].Substring(rootPathString.Length + 1);
 				String dir = dirList[i].Substring(pathString.Length);
 
-				html += "<li><a href=\"./" + dir + "\">" + dir + "</a></li>";
+				html += "<li><a href=\"/" + url + "\">" + dir + "</a></li>";
 			}
 
 			String[] fileList = Directory.GetFiles(pathString);
 
 			for (int i = 0; i < fileList.Length; i++)
 			{
+				String url = fileList[i].Substring(rootPathString.Length + 1);
 				String file = fileList[i].Substring(pathString.Length);
 
-				html += "<li><a href=\"./" + file + "\">" + file + "</a></li>";
+				html += "<li><a href=\"/" + url + "\">" + file + "</a></li>";
 			}
 
 			html += "</ul>";

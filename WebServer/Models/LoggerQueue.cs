@@ -8,82 +8,71 @@ using System.Threading.Tasks;
 
 namespace WebServer.Models
 {
-	public class LoggerQueue
+
+
+	class LoggerQueue
 	{
-		private static EventWaitHandle wh = new AutoResetEvent(false);
+		private const int BUFLEN = 3;
 
-		private Thread worker;
-		
-		private static String[] logQueue = new String[3];
+		private static Semaphore put = new Semaphore(BUFLEN, BUFLEN); //Er kan maar BUFLEN in de Queue;
+		private static Semaphore get = new Semaphore(0, BUFLEN); //Er kan niet meer uit dan in
 
-		private static SemaphoreSlim sem = new SemaphoreSlim(logQueue.Length);
+		private static string[] buffer = new string[BUFLEN];
 
-		private static int logIdx = -1;
+		private Thread thread;
+
+		private static int getpos, putpos;
+		private static int count;
 
 		public LoggerQueue()
 		{
-			worker = new Thread(Work);
-			worker.Start();
-		}
-
-		public static void Add(String line)
-		{
-			sem.Wait();
-
-			lock (logQueue)
-			{
-				
-				logIdx++;
-				logQueue[logIdx] = line;
-			}
-
-			wh.Set();
-
+			this.thread = new Thread(new ThreadStart(Work));
+			this.thread.Start();
 		}
 
 		public void Work()
 		{
 			while (true)
 			{
-				String line = null;
+				string msg = LoggerQueue.Get();
 
-				lock (logQueue)
+				using (StreamWriter sw = File.AppendText("./log.txt"))
 				{
-					line = logQueue[0];
-
-					if (line != null)
-					{
-						// Alles 1 naar links opschuiven
-						var newArray = new String[logQueue.Length];
-
-						Array.Copy(logQueue, 1, newArray, 0, logQueue.Length - 1);
-						
-						logQueue = newArray;
-
-						logIdx--;
-						sem.Release();
-					}
-				}
-
-				if (line != null)
-				{
-					//Console.WriteLine("Writing to file: " + line);
-
-					// Write the string to a file.
-					
-					using (StreamWriter sw = File.AppendText("./log.txt"))
-					{
-						sw.WriteLine(line);
-					}
-					//Console.WriteLine("Done: " + line);
-				}
-				else
-				{
-					//Console.WriteLine("Nothing to write, sleeping...");
-					wh.WaitOne();
+					sw.WriteLine(msg);
 				}
 
 			}
+		}
+
+		private static string Get()
+		{
+			get.WaitOne(); // Staat er iets in de Queue?
+			lock (buffer)
+			{
+				string msg = buffer[getpos];
+				getpos = (getpos + 1) % BUFLEN;
+				count--;
+
+				put.Release(); //Er is iets uit de Queue gehaald dus er kan weer iets in
+				return msg;
+			}
+		}
+
+		public static void Put(string msg)
+		{
+			put.WaitOne(); // Is er nog plek in de Queue?
+			lock (buffer)
+			{
+				buffer[putpos] = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss - ") + msg;
+				
+				Console.WriteLine(buffer[putpos]);
+
+				putpos = (putpos + 1) % BUFLEN;
+				count++;
+
+				get.Release(); // Er is een item toegevoegd, er kan er dus 1 weer uit worden gehaald
+			}
+
 		}
 	}
 }

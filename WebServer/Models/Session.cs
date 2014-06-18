@@ -8,42 +8,69 @@ namespace WebServer.Models
 {
 	public class Session
 	{
+		private static Dictionary<string, Session> sessions = new Dictionary<string, Session>();
+
+		public static Session Initialize(string SessionId)
+		{
+			if (sessions.ContainsKey(SessionId))
+			{
+				Session session = sessions[SessionId];
+				
+				if (session.EnforceExpiry())
+				{
+					sessions.Remove(SessionId);
+					LoggerQueue.Put("Session: Session expired: " + SessionId);
+				}
+				else
+					return session;
+			}
+			else
+			{
+				LoggerQueue.Put("Session: Session \"" + SessionId + "\" unknown.");
+			}
+
+			Session sess = new Session();
+			return sess;
+		}
+
 		public static Session Initialize()
 		{
 			return new Session();
 		}
 
-		private Dictionary<string, string> values;
-
-		public string Id
+		public static void AddSession(Session sess)
 		{
-			get { return this.values["SessionId"]; }
+			Session.sessions.Add(sess.Id, sess);
+		}
+
+		public string Id;
+		public User User;
+		public string LastToken;
+
+		public DateTime Expires
+		{
+			get;
+			private set;
 		}
 
 		public Session()
+			: this(Guid.NewGuid().ToString("N"))
 		{
-			this.values = new Dictionary<string, string>();
 			
-			this.values["SessionId"] = Guid.NewGuid().ToString("N");
 		}
 
-		public void SetValue(string key, string value)
+		public Session(string SessionId)
 		{
-			if (String.IsNullOrEmpty(key) || String.IsNullOrEmpty(value) || values.ContainsKey(key))
-				throw new ArgumentException();
-
-			values.Add(key, value);
+			Id = SessionId;
+			Expires = DateTime.Now.AddMinutes(1);
+			Session.sessions.Add(SessionId, this);
 		}
 
-		public string GetValue(string key)
+		private bool EnforceExpiry()
 		{
-			if (String.IsNullOrEmpty(key))
-				throw new ArgumentException();
-
-			if (!values.ContainsKey(key))
-				throw new ArgumentOutOfRangeException();
-
-			return values[key];
+			return (this.Expires < DateTime.Now);
 		}
+
+		
 	}
 }
