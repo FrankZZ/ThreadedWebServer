@@ -13,11 +13,14 @@ namespace WebServer.Models
 		private string[] validMethods = {"GET", "POST"};
 		private string[] validProtocols = {"HTTP/1.0", "HTTP/1.1"};
 		
-		private NameValueCollection _params;
-		public NameValueCollection Params
+		private Dictionary<string, string> _params;
+		public Dictionary<string, string> Params
 		{
 			get { return _params; }
-			set { _params = value; }
+			set 
+			{
+				_params = value; 
+			}
 		}
 
 		public string SessionId
@@ -77,6 +80,7 @@ namespace WebServer.Models
 			dispatcher = new Dispatcher();
 			this.webRoot = webRoot;
 			this.stream = stream;
+			this.Params = new Dictionary<string, string>();
 		}
 
 		public void SetHeader(string key, string value)

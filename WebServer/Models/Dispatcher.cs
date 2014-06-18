@@ -58,7 +58,7 @@ namespace WebServer.Models
 								return;
 							}
 
-							if (sess.LastToken == request.Params.Get("token"))
+							if (sess.LastToken == request.Params["token"])
 							{
 								if (!sess.User.IsAdmin)
 								{
@@ -66,26 +66,33 @@ namespace WebServer.Models
 								}
 								else
 								{
-									Configuration.Entries.controlPort = request.Params.Get("controlPort");
-									Configuration.Entries.defaultPage = request.Params.Get("defaultPage");
-									Configuration.Entries.directoryBrowsing = request.Params.Get("directoryBrowsing");
-									Configuration.Entries.webPort = request.Params.Get("webPort");
-									Configuration.Entries.webRoot = request.Params.Get("webRoot");
+									if (request.Params["directoryBrowsing"] != "true" || request.Params["directoryBrowsing"] != "false")
+										status = 500;
+									else
+									{
+										Configuration.Entries.controlPort = request.Params["controlPort"];
+										Configuration.Entries.defaultPage = request.Params["defaultPage"];
+										Configuration.Entries.directoryBrowsing = request.Params["directoryBrowsing"];
+										Configuration.Entries.webPort = request.Params["webPort"];
+										Configuration.Entries.webRoot = request.Params["webRoot"];
 
-									Configuration.Write();
-
-									Dictionary<String, String> dict = Configuration.Entries.ToDictionary();
-									string token = Guid.NewGuid().ToString("N");
-									sess.LastToken = token;
-									dict.Add("token", token);
-
-									status = CheckStatus(true, dict);
+										Configuration.Write();
+									}
+									
 								} 
 								
 							}
 							else
 								LoggerQueue.Put("Dispatcher: Detected form token mismatch.");
+							if (status == -1)
+							{
+								Dictionary<String, String> dict = Configuration.Entries.ToDictionary();
+								string token = Guid.NewGuid().ToString("N");
+								sess.LastToken = token;
+								dict.Add("token", token);
 
+								status = CheckStatus(true, dict);
+							}
 							
 						}
 					}
@@ -156,13 +163,13 @@ namespace WebServer.Models
 
 		private bool DispatchLogin()
 		{
-			string userName = request.Params.Get("username");
-			string pass = request.Params.Get("password");
-			string token = request.Params.Get("token");
+			string userName = request.Params["username"];
+			string pass = request.Params["password"];
+			string token = request.Params["token"];
 			Session sess = null;
 			sess = GetSession();
 
-			if (sess.LastToken == request.Params.Get("token"))
+			if (sess.LastToken == request.Params["token"])
 			{
 				if (sess.User != null && sess.User.IsAuthorized)
 				{
@@ -302,7 +309,7 @@ namespace WebServer.Models
 				return 404;
 			}
 
-			return 500;
+			return 403;
 		}
 
 		private void WriteError(int status)

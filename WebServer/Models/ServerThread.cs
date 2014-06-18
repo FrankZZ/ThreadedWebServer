@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -105,7 +106,13 @@ namespace WebServer.Models
 							sr.Read(buffer, 0, buffer.Length);
 							String body = new String(buffer);
 
-							request.Params = HttpUtility.ParseQueryString(body);
+							NameValueCollection query = HttpUtility.ParseQueryString(body);
+
+							foreach (string key in query.AllKeys)
+							{
+								request.Params.Add(key, HttpUtility.HtmlEncode(query.Get(key)));
+							}
+							
 						}
 
 						request.dispatch();
