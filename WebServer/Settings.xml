@@ -1,2 +1,2 @@
 <?xml version="1.0"?>
-<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Host="127.0.0.1" webPort="3333" controlPort="3334" webRoot="test" defaultPage="index.html" />
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Host="127.0.0.1" webPort="3333" controlPort="3334" directoryBrowsing="true" webRoot="test" defaultPage="index.html" />

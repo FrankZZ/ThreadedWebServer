@@ -38,7 +38,7 @@ namespace WebServer.Models
 			if (!File.Exists(Configuration.URI))
 				File.Create(Configuration.URI).Close();
 
-			using (FileStream fs = new FileStream(Configuration.URI, FileMode.Open, FileAccess.Write))
+			using (FileStream fs = new FileStream(Configuration.URI, FileMode.Truncate, FileAccess.Write))
 			{
 				serializer.Serialize(fs, Entries);
 			}

@@ -31,7 +31,7 @@ namespace WebServer.Models
 				Convert.ToInt32(Configuration.Entries.controlPort)
 			);
 
-			// new Database().RegisterUser("frank", "tester");
+			//new Database().RegisterUser("user", "tester123");
 
 			server.Run();
 			controlServer.Run();

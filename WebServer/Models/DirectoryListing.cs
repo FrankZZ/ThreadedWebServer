@@ -13,7 +13,7 @@ namespace WebServer.Models
 		{
 			pathString = pathString.TrimEnd('/');
 
-			String html = "<ul>";
+			String html = "<html><head><title>Directory Listing</title></head><body><h1>Directory Listing</h1><ul>";
 
 			String[] dirList = Directory.GetDirectories(pathString);
 
@@ -35,7 +35,7 @@ namespace WebServer.Models
 				html += "<li><a href=\"/" + url + "\">" + file + "</a></li>";
 			}
 
-			html += "</ul>";
+			html += "</ul></body></html>";
 
 			return html;
 		}

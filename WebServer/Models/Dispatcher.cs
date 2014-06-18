@@ -60,24 +60,33 @@ namespace WebServer.Models
 
 							if (sess.LastToken == request.Params.Get("token"))
 							{
-								Configuration.Entries.controlPort = request.Params.Get("controlPort");
-								Configuration.Entries.defaultPage = request.Params.Get("defaultPage");
-								Configuration.Entries.directoryBrowsing = request.Params.Get("directoryBrowsing");
-								Configuration.Entries.webPort = request.Params.Get("webPort");
-								Configuration.Entries.webRoot = request.Params.Get("webRoot");
+								if (!sess.User.IsAdmin)
+								{
+									status = 403;
+								}
+								else
+								{
+									Configuration.Entries.controlPort = request.Params.Get("controlPort");
+									Configuration.Entries.defaultPage = request.Params.Get("defaultPage");
+									Configuration.Entries.directoryBrowsing = request.Params.Get("directoryBrowsing");
+									Configuration.Entries.webPort = request.Params.Get("webPort");
+									Configuration.Entries.webRoot = request.Params.Get("webRoot");
 
-								Configuration.Write();
+									Configuration.Write();
+
+									Dictionary<String, String> dict = Configuration.Entries.ToDictionary();
+									string token = Guid.NewGuid().ToString("N");
+									sess.LastToken = token;
+									dict.Add("token", token);
+
+									status = CheckStatus(true, dict);
+								} 
+								
 							}
 							else
 								LoggerQueue.Put("Dispatcher: Detected form token mismatch.");
 
-
-							Dictionary<String, String> dict = Configuration.Entries.ToDictionary();
-							string token = Guid.NewGuid().ToString("N");
-							sess.LastToken = token;
-							dict.Add("token", token);
-
-							status = CheckStatus(true, dict);
+							
 						}
 					}
 					else
@@ -238,25 +247,32 @@ namespace WebServer.Models
 
 					if (Directory.Exists(absolutePath))
 					{
-						if (File.Exists(absolutePath + "index.html"))
+						if (File.Exists(absolutePath + Configuration.Entries.defaultPage))
 						{
-							absolutePath += "index.html";
+							absolutePath += Configuration.Entries.defaultPage;
 						}
 						else
 						{
-							String data = DirectoryListing.Generate(request.WebRoot, absolutePath);
-
-							response.SetHeader("Content-Type", MimeTypes.List["html"]);
-
-							byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
-							byte[] body = Encoding.UTF8.GetBytes(data);
-
-							if (request.Stream.CanWrite)
+							if (Configuration.Entries.directoryBrowsing == "true")
 							{
-								request.Stream.Write(headers, 0, headers.Length);
-								request.Stream.Write(body, 0, body.Length);
+								String data = DirectoryListing.Generate(request.WebRoot, absolutePath);
 
-								return 200;
+								response.SetHeader("Content-Type", MimeTypes.List["html"]);
+
+								byte[] headers = Encoding.UTF8.GetBytes(response.ToString());
+								byte[] body = Encoding.UTF8.GetBytes(data);
+
+								if (request.Stream.CanWrite)
+								{
+									request.Stream.Write(headers, 0, headers.Length);
+									request.Stream.Write(body, 0, body.Length);
+
+									return 200;
+								}
+							}
+							else
+							{
+								return 403;
 							}
 						}
 					
