@@ -14,7 +14,7 @@ namespace WebServer.Models
 	{
 		private const int BUFFER_LENGTH = 256;
 		private const int MAX_HEADER_LENGTH = 256;
-
+		
 		private Thread thread;
 
 		private string webRoot;
@@ -125,14 +125,16 @@ namespace WebServer.Models
 						this.Log(stopwatch, request, ip);
 					}
 
-					//Console.WriteLine("-");
+					Console.WriteLine("-");
 					
 				}
 				catch (Exception ex)
 				{
+					Server.ConcurrentThreads.Release();
 					LoggerQueue.Put(ex.Message);
 				}
 			}
+			Server.ConcurrentThreads.Release();
 		}
 
 		private void Log(Stopwatch stopwatch, Request request, String ip)

@@ -10,6 +10,10 @@ namespace WebServer.Models
 	{
 		protected IPEndPoint serverEP;
 		protected Socket listener;
+		public static Semaphore ConcurrentThreads = new Semaphore(20, 20);
+		
+
+		public ManualResetEvent Shutdown = new ManualResetEvent(false);
 
 		virtual protected string WEBROOT 
 		{
@@ -50,6 +54,15 @@ namespace WebServer.Models
 
 				while (listening)
 				{
+					/*if (Configuration.ShutdownRequested)
+					{
+						listener.Close();
+						Shutdown.Set();
+						break;
+					}
+					*/
+					ConcurrentThreads.WaitOne();
+
 					Socket so = listener.Accept();
 					NetworkStream ns = new NetworkStream(so);
 					this.handleClient(ns, so);

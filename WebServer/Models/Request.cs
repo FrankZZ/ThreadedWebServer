@@ -77,7 +77,12 @@ namespace WebServer.Models
 		public Request(Stream stream, string webRoot)
 		{
 			headers = new Dictionary<string, string>();
-			dispatcher = new Dispatcher();
+			
+			if (webRoot == Constants.CONTROL_WEBROOT)
+				dispatcher = new ControlDispatcher();
+			else
+				dispatcher = new Dispatcher();
+
 			this.webRoot = webRoot;
 			this.stream = stream;
 			this.Params = new Dictionary<string, string>();

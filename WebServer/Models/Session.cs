@@ -62,7 +62,7 @@ namespace WebServer.Models
 		public Session(string SessionId)
 		{
 			Id = SessionId;
-			Expires = DateTime.Now.AddMinutes(1);
+			Expires = DateTime.Now.AddMinutes(10);
 			Session.sessions.Add(SessionId, this);
 		}
 

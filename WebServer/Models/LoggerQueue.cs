@@ -63,7 +63,7 @@ namespace WebServer.Models
 			put.WaitOne(); // Is er nog plek in de Queue?
 			lock (buffer)
 			{
-				buffer[putpos] = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss - ") + msg;
+				buffer[putpos] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss - ") + msg;
 				
 				Console.WriteLine(buffer[putpos]);
 

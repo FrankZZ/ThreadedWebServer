@@ -16,6 +16,8 @@ namespace WebServer.Models
 
 		public static XMLSettingsModel Entries;
 
+		public static bool ShutdownRequested = false;
+
 		public static void Initialize()
 		{
 			Configuration.serializer = new XmlSerializer(typeof(XMLSettingsModel), new XmlRootAttribute() { ElementName = "Settings" });

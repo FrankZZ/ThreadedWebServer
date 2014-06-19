@@ -72,6 +72,7 @@
     <Compile Include="Init.cs" />
     <Compile Include="Models\Configuration.cs" />
     <Compile Include="Models\Constants.cs" />
+    <Compile Include="Models\ControlDispatcher.cs" />
     <Compile Include="Models\Cookie.cs" />
     <Compile Include="Models\Database.cs" />
     <Compile Include="Models\DirectoryListing.cs" />
